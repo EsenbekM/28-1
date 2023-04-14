@@ -1,13 +1,14 @@
 from aiogram import Dispatcher, types
 from config import bot, dp
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from .client_kb import start_markup
 
 
 # @dp.message_handler(commands=['start'])
 async def start_command(message: types.Message):
     photo = open("media/cat.jpg", "rb")
     # await bot.send_photo()
-    await message.answer_photo(photo, caption="Че нада?")
+    await message.answer_photo(photo, caption="Че нада?", reply_markup=start_markup)
     # await bot.send_message(message.from_user.id, f"Привет хозяин {message.from_user.full_name}!")
     # await message.answer("This is an answer method!")
     # await message.reply("This is a reply method!")

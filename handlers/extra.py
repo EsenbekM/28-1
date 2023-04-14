@@ -20,9 +20,11 @@ async def filter_bad_word(message: types.Message):
         # await bot.pin_chat_message(message.chat.id, message.message_id)
 
     if message.text == "dice":
-        a = await message.answer_dice(emoji="🎲")
+        player = await message.answer_dice(emoji="🎲")
+        # bot = await message.answer_dice(emoji="🎲")
         # await bot.send_dice()
-        # print(a.dice.value)
+        # if player.dice.value > bot.dice.value:
+        #     await message.answer()
 
 
 def register_handlers_extra(dp: Dispatcher):
