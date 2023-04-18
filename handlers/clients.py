@@ -2,6 +2,7 @@ from aiogram import Dispatcher, types
 from config import bot, dp
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from .client_kb import start_markup
+from database.bot_db import sql_command_random
 
 
 # @dp.message_handler(commands=['start'])
@@ -48,7 +49,19 @@ async def quiz_1(message: types.Message):
     # await message.answer_poll()
 
 
+async def get_random_anketa(message: types.Message):
+    random_user = await sql_command_random()
+    info = f"{random_user[3]} {random_user[4]} " \
+           f"{random_user[5]} {random_user[6]}"
+    info = info + f"\n\n@{random_user[2]}" if random_user[2] else info
+    await message.answer_photo(
+        random_user[-1],
+        caption=info
+    )
+
+
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(start_command, commands=['start'])
     dp.register_message_handler(quiz_1, commands=['quiz'])
     dp.register_message_handler(help_command, commands=['help'])
+    dp.register_message_handler(get_random_anketa, commands=['get'])

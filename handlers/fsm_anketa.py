@@ -3,8 +3,10 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from . import client_kb
+from database.bot_db import sql_command_insert
 
 
+# Finite State Machine
 class FSMAdmin(StatesGroup):
     name = State()
     age = State()
@@ -24,7 +26,7 @@ async def fsm_start(message: types.Message):
 
 async def load_name(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        data["id"] = message.from_user.id
+        data["telegram_id"] = message.from_user.id
         data["username"] = message.from_user.username
         data["name"] = message.text
     await FSMAdmin.next()
@@ -72,7 +74,7 @@ async def load_photo(message: types.Message, state: FSMContext):
 
 async def submit_state(message: types.Message, state: FSMContext):
     if message.text.lower() == "да":
-        # Запись в БД
+        await sql_command_insert(state)
         await state.finish()
         await message.answer("Все свободен")
     elif message.text.lower() == "заново":
