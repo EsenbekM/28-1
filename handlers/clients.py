@@ -2,17 +2,22 @@ from aiogram import Dispatcher, types
 from config import bot, dp
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from .client_kb import start_markup
-from database.bot_db import sql_command_random
+from database.bot_db import sql_command_random, sql_command_all_users, sql_command_insert_user
+from .utils import get_ids_from_users
 
 
-# @dp.message_handler(commands=['start'])
 async def start_command(message: types.Message):
+    users = await sql_command_all_users()
+    ids = get_ids_from_users(users)
+    if message.from_user.id not in ids:
+        await sql_command_insert_user(
+            message.from_user.id,
+            message.from_user.username,
+            message.from_user.full_name
+        )
+
     photo = open("media/cat.jpg", "rb")
-    # await bot.send_photo()
     await message.answer_photo(photo, caption="Че нада?", reply_markup=start_markup)
-    # await bot.send_message(message.from_user.id, f"Привет хозяин {message.from_user.full_name}!")
-    # await message.answer("This is an answer method!")
-    # await message.reply("This is a reply method!")
 
 
 async def help_command(message: types.Message):
